@@ -1,0 +1,190 @@
+# nhmmer :: search a DNA model or alignment against a DNA database
+# HMMER 3.1b1 (May 2013); http://hmmer.org/
+# Copyright (C) 2013 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query file:                      testHMM
+# target sequence database:        testDNASeq
+# input query is asserted as:      DNA
+# number of worker threads:        4
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       testAlign  [M=20]
+Scores for complete hits:
+    E-value  score  bias  Sequence    start    end  Description
+    ------- ------ -----  --------    -----  -----  -----------
+      7e-06   16.9   0.9  testDNASeq    508    527  
+    7.1e-06   16.9   0.9  testDNASeq      1     20  
+    7.1e-06   16.9   0.9  testDNASeq     40     59  
+    1.5e-05   15.9   0.4  testDNASeq    196    215  
+    2.9e-05   15.1   1.4  testDNASeq     79     98  
+    4.2e-05   14.6   1.7  testDNASeq    118    137  
+    0.00023   12.4   1.9  testDNASeq    157    176  
+    0.00092   10.6   0.9  testDNASeq    469    488  
+  ------ inclusion threshold ------
+      0.012    7.3   1.2  testDNASeq    391    407  
+      0.032    6.0   0.5  testDNASeq    236    251  
+       0.12    4.3   2.1  testDNASeq    275    291  
+       0.29    3.1   0.6  testDNASeq    352    371  
+
+
+Annotation for each hit  (and alignments):
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ !   16.9   0.9     7e-06         1        20 []       508       527 ..       508       527 ..       975    0.95
+
+  Alignment:
+  score: 16.9 bits
+   testAlign   1 ttgcAatAcAcaagtGatcg 20 
+                 ttgcAatAcAcaagtGatcg
+  testDNASeq 508 TTGCAATACACAAGTGATCG 527
+                 69****************97 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ !   16.9   0.9   7.1e-06         1        20 []         1        20 [.         1        20 [.       975    0.95
+
+  Alignment:
+  score: 16.9 bits
+   testAlign  1 ttgcAatAcAcaagtGatcg 20
+                ttgcAatAcAcaagtGatcg
+  testDNASeq  1 TTGCAATACACAAGTGATCG 20
+                69****************97 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ !   16.9   0.9   7.1e-06         1        20 []        40        59 ..        40        59 ..       975    0.95
+
+  Alignment:
+  score: 16.9 bits
+   testAlign  1 ttgcAatAcAcaagtGatcg 20
+                ttgcAatAcAcaagtGatcg
+  testDNASeq 40 TTGCAATACACAAGTGATCG 59
+                69****************97 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ !   15.9   0.4   1.5e-05         1        20 []       196       215 ..       196       215 ..       975    0.95
+
+  Alignment:
+  score: 15.9 bits
+   testAlign   1 ttgcAatAcAcaagtGatcg 20 
+                 ttgcA tAcAcaagtGatcg
+  testDNASeq 196 TTGCACTACACAAGTGATCG 215
+                 69****************97 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ !   15.1   1.4   2.9e-05         1        20 []        79        98 ..        79        98 ..       975    0.95
+
+  Alignment:
+  score: 15.1 bits
+   testAlign  1 ttgcAatAcAcaagtGatcg 20
+                ttgcAatAcAcaa tGatcg
+  testDNASeq 79 TTGCAATACACAATTGATCG 98
+                69****************97 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ !   14.6   1.7   4.2e-05         1        20 []       118       137 ..       118       137 ..       975    0.96
+
+  Alignment:
+  score: 14.6 bits
+   testAlign   1 ttgcAatAcAcaagtGatcg 20 
+                 ttgcAa AcAcaagtGatcg
+  testDNASeq 118 TTGCAAAACACAAGTGATCG 137
+                 69****************97 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ !   12.4   1.9   0.00023         1        20 []       157       176 ..       157       176 ..       975    0.95
+
+  Alignment:
+  score: 12.4 bits
+   testAlign   1 ttgcAatAcAcaagtGatcg 20 
+                 ttgcAatAcA aagtGatcg
+  testDNASeq 157 TTGCAATACAAAAGTGATCG 176
+                 69****************97 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ !   10.6   0.9   0.00092         1        20 []       469       488 ..       469       488 ..       975    0.95
+
+  Alignment:
+  score: 10.6 bits
+   testAlign   1 ttgcAatAcAcaagtGatcg 20 
+                 ttgcA tAcAcaag Gatcg
+  testDNASeq 469 TTGCAGTACACAAGAGATCG 488
+                 69****************97 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ ?    7.3   1.2     0.012         1        17 [.       391       407 ..       391       410 ..       975    0.84
+
+  Alignment:
+  score: 7.3 bits
+   testAlign   1 ttgcAatAcAcaagtGa 17 
+                 ttgcAatAcAc agt a
+  testDNASeq 391 TTGCAATACACCAGTTA 407
+                 59*********999755 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ ?    6.0   0.5     0.032         2        17 ..       236       251 ..       235       252 ..       975    0.93
+
+  Alignment:
+  score: 6.0 bits
+   testAlign   2 tgcAatAcAcaagtGa 17 
+                 tgcAatAc caagtGa
+  testDNASeq 236 TGCAATACCCAAGTGA 251
+                 89***********996 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ ?    4.3   2.1      0.12         2        18 ..       275       291 ..       274       293 ..       975    0.92
+
+  Alignment:
+  score: 4.3 bits
+   testAlign   2 tgcAatAcAcaagtGat 18 
+                 tgcA tA AcaagtGat
+  testDNASeq 275 TGCATTAAACAAGTGAT 291
+                 79************987 PP
+
+>> testDNASeq  
+    score  bias    Evalue   hmmfrom    hmm to     alifrom    ali to      envfrom    env to    sq len      acc
+   ------ ----- ---------   -------   -------    --------- ---------    --------- --------- ---------    ----
+ ?    3.1   0.6      0.29         1        20 []       352       371 ..       352       371 ..       975    0.87
+
+  Alignment:
+  score: 3.1 bits
+   testAlign   1 ttgcAatAcAcaagtGatcg 20 
+                 ttgcA tA  caagtG+tcg
+  testDNASeq 352 TTGCAGTAGCCAAGTGGTCG 371
+                 58899999999*******96 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (20 nodes)
+Target sequences:                            1  (1950 residues searched)
+Residues passing SSV filter:               628  (0.322); expected (0.02)
+Residues passing bias filter:              628  (0.322); expected (0.02)
+Residues passing Vit filter:               556  (0.285); expected (0.003)
+Residues passing Fwd filter:               479  (0.246); expected (3e-05)
+Total number of hits:                       12  (0.118)
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]

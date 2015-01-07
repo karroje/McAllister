@@ -72,5 +72,5 @@ def isEqual(a, b):
 
 def isEqualV(a,b):
     """Vectorized version of isEqual"""
-    return _isZero(a-b)
+    return isZero(a-b)
 
