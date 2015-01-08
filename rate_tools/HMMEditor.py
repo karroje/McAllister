@@ -1,5 +1,6 @@
 import math
 
+    
 class hmmprofie:
     def __init__(self):
         self.name = "tempName"
@@ -7,10 +8,14 @@ class hmmprofie:
         self.transitionLine = ""
         self.header = ""
         self.alphabet=[]
+        #List of list the first 4 numbers are the transition probs the 6th is the consensus letter
         self.emissionProbs=[]
+        #List of list one for each letter of alphabet in order
         self.insertionProbs=[]
+        # List of transition probabilities see transitionLine for more details
         self.transitionProbs=[]
         self.emissionDecimalProbs=[]
+    
     def defineAlphabet(self,line):
         splitLine = line.split()
         self.alphabet = splitLine[1:]
@@ -33,6 +38,133 @@ class hmmprofie:
                 negLN = -1*LN
                 self.emissionProbs[x][y] = str(negLN)
         print self.emissionProbs
+        
+    def getConsensusIndex(self, indexNum):
+        letter = self.emissionProbs[indexNum][5]
+        letter = letter.upper()
+        return self.alphabet.index(letter)
+    
+    def assignProportions(self, probs, consensusIndex, amtToAdd):
+        sum = 0
+        for i in range(len(probs)):
+            if (i != consensusIndex):
+                sum += probs[i]
+        deltas = []
+        for i in range(len(probs)):
+            if (i != consensusIndex):
+                deltas.append(-1*amtToAdd*probs[i]/sum)
+            else:
+                deltas.append(amtToAdd)
+        print "Original Deltas"
+        print deltas
+        return deltas
+    """
+    Reallocates extra from probabilities below 0 or over 100.  Should not be used often
+    hence the print statement
+    """
+    def reallocateExtras(self, uneditSet, amtToAdd, deltas):
+        print"$$$$$ Numbers are getting pretty out of wack, Jack $$$$$$$$$"
+        partitions = len(deltas) - len(uneditSet)
+        for i in range(len(deltas)):
+            if i not in uneditSet:
+                deltas[i] += amtToAdd/partitions
+        return deltas
+    
+    def calibrateDeltasToThresholds(self, conIndex, topThreshold, bottomThreshold, origProbs, startingDeltas):
+        changeToAlts = 0
+        altsAtThreshold = set()
+        for x in range(origProbs):
+            origProb = origProbs[x]
+            deltaProb = startingDeltas[x]
+            newDeltaProb = deltaProb
+            if origProb + deltaProb > topThreshold:
+                newDeltaProb = topThreshold - origProb 
+                altsAtThreshold.add(x)              
+            elif origProb + deltaProb < bottomThreshold:
+                newDeltaProb = bottomThreshold - origProb
+                altsAtThreshold.add(x)
+            changeToAlts += deltaProb - newDeltaProb
+            startingDeltas[x] = newDeltaProb
+        if changeToAlts > 0 or changeToAlts < 0:
+            altsAtThreshold.add(conIndex)
+            self.reallocateExtras(altsAtThreshold, changeToAlts, startingDeltas)
+            self.calibrateDeltasToThresholds(conIndex, topThreshold, bottomThreshold, origProbs, startingDeltas)
+        return startingDeltas
+    '''
+    Ensures that the consensus match still has the highest probability by taking average of all elements 
+    higher than it and setting each element equal to the average
+    '''
+    def maintainConsensus(self, deltas, origProbs, consensusIndex):
+        newConsensusProb = origProbs[consensusIndex] + deltas[consensusIndex]
+        sumOfHigherProbs = 0
+        indexesOfHigherProbs = []
+        for i in range(len(origProbs)):
+            newProb = origProbs[i] + deltas[i]
+            if newProb > newConsensusProb:
+                sumOfHigherProbs += newProb
+                indexesOfHigherProbs.append(i)
+        if sumOfHigherProbs > 0:
+            sumOfHigherProbs +=newConsensusProb
+            indexesOfHigherProbs.append(consensusIndex)
+            avgProb = sumOfHigherProbs/len(indexesOfHigherProbs)
+            for i in indexesOfHigherProbs:
+                deltas[i] = avgProb - origProbs[i]
+        return deltas
+    
+    '''
+    Determines if any of the following are violated and shifts probabilites accordingly:
+    1)something goes over 100% ... This is probably an error, but shifts to other alternatives
+    2) Something goes under 0% ... This is probably okay, but shifts to other alternatives
+    3) A letter other than the consensus has the highest percentile ... assignes each the average between
+    the set of letters where this would be applicable
+    '''
+    def determineDeltaChanges(self, origProbs, consensusIndex, amtToAdd, proportional, topThreshold, bottomThreshold):
+        startingDeltas = []
+        if proportional:
+            startingDeltas = self.assignProportions(origProbs, consensusIndex, amtToAdd)
+        else:
+            startingDeltas = self.assignProportions([1]*len(origProbs), consensusIndex, amtToAdd)
+        # make sure thresholds aren't violated and calibrate accordingly by moving alternatives
+        deltas = self.calibrateDeltasToThresholds(consensusIndex, topThreshold, bottomThreshold, origProbs, startingDeltas)
+        self.maintainConsensus(deltas, origProbs, consensusIndex)
+        return deltas
+            
+           
+            
+            
+    
+    '''    
+    the parameter amtToAdd is the amount that will be added to the most likely value
+    To reduce the value just send in a negative number
+    The parameter proportional indicates whether to reduce/increase the other proportions
+    in relation to their existing value for or uniformly across all alternatives
+    E.g. if A = 60%, C=20%, G =10%, T = 10% ... if you add -10% to A and have proportional you will
+    add 5% to C and 2.5 to each of G and T.  If not proportional, then you will will add 3.33 to each
+    
+    Other notes the method checks that the initial value does not go to 100% nor does it drop lower
+    than any other letter.   If it does go below any other letters each letter is set to the average 
+    of the set.  These checks should be irrelevant in most common cases 
+    '''
+    def addToDecimalEmissionProbs(self, amtToAdd, topThreshold = .96, bottomThreshold = .01, proportional = False):
+        #check to see if input is reasonable
+        if amtToAdd > .75 or amtToAdd < -.75:
+            raise Exception("The amount of change is outside the expected range")
+        if topThreshold > 1 or amtToAdd < .26:
+            raise Exception("The topThreshold is outside the expected range")
+        if bottomThreshold > .25 or amtToAdd < .00001:
+            raise Exception("The bottomThreshold is outside the expected range")
+        for i in range(1,len(self.emissionDecimalProbs)):
+            index = self.getConsensusIndex(i)
+            currentProb = self.emissionDecimalProbs[i][index]
+            amtToAddIndex = amtToAdd
+            if currentProb + amtToAdd > topThreshold:
+                amtToAddIndex = topThreshold - currentProb
+            deltas = self.determineDeltaChanges(self.emissionDecimalProbs[i], index, amtToAddIndex,
+                                                 proportional, topThreshold, bottomThreshold)
+            for j in range(len(self.emissionDecimalProbs[i])):
+                self.emissionDecimalProbs[i][j] += deltas[j]
+
+        
                 
     def readProbs(self, file):
         tmpLine = file.readline()
