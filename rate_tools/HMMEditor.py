@@ -36,7 +36,7 @@ class hmmprofie:
             for y in range(len(self.alphabet)):
                 LN = math.log(self.emissionDecimalProbs[x][y])
                 negLN = -1*LN
-                self.emissionProbs[x][y] = str(negLN)
+                self.emissionProbs[x][y] = str(round(negLN,5))
         print self.emissionProbs
         
     def getConsensusIndex(self, indexNum):
@@ -55,8 +55,8 @@ class hmmprofie:
                 deltas.append(-1*amtToAdd*probs[i]/sum)
             else:
                 deltas.append(amtToAdd)
-        print "Original Deltas"
-        print deltas
+        #print "Original Deltas"
+        #print deltas
         return deltas
     """
     Reallocates extra from probabilities below 0 or over 100.  Should not be used often
@@ -73,7 +73,7 @@ class hmmprofie:
     def calibrateDeltasToThresholds(self, conIndex, topThreshold, bottomThreshold, origProbs, startingDeltas):
         changeToAlts = 0
         altsAtThreshold = set()
-        for x in range(origProbs):
+        for x in range(len(origProbs)):
             origProb = origProbs[x]
             deltaProb = startingDeltas[x]
             newDeltaProb = deltaProb
@@ -147,11 +147,12 @@ class hmmprofie:
     '''
     def addToDecimalEmissionProbs(self, amtToAdd, topThreshold = .96, bottomThreshold = .01, proportional = False):
         #check to see if input is reasonable
+        print self.emissionDecimalProbs
         if amtToAdd > .75 or amtToAdd < -.75:
             raise Exception("The amount of change is outside the expected range")
-        if topThreshold > 1 or amtToAdd < .26:
+        if topThreshold > 1 or topThreshold < .26:
             raise Exception("The topThreshold is outside the expected range")
-        if bottomThreshold > .25 or amtToAdd < .00001:
+        if bottomThreshold > .25 or bottomThreshold < .00001:
             raise Exception("The bottomThreshold is outside the expected range")
         for i in range(1,len(self.emissionDecimalProbs)):
             index = self.getConsensusIndex(i)
@@ -163,7 +164,7 @@ class hmmprofie:
                                                  proportional, topThreshold, bottomThreshold)
             for j in range(len(self.emissionDecimalProbs[i])):
                 self.emissionDecimalProbs[i][j] += deltas[j]
-
+        print self.emissionDecimalProbs
         
                 
     def readProbs(self, file):
@@ -232,4 +233,7 @@ class hmmprofie:
     
 testProfile = hmmprofie()
 testProfile.parseFile("testHmm")
-testProfile.writeFile("testHMMout")
+testProfile.addToDecimalEmissionProbs(-.7)
+testProfile.addToDecimalEmissionProbs(.7)
+testProfile.convertDecimalProbsToEmission()
+testProfile.writeFile("HMMGreaterChange")

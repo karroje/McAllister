@@ -6,7 +6,7 @@
 # query file:                      testHMM
 # target sequence database:        testDNASeq
 # input query is asserted as:      DNA
-# number of worker threads:        4
+# number of worker threads:        8
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Query:       testAlign  [M=20]
