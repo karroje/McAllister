@@ -6,7 +6,7 @@ import scipy.linalg
 from numpy import *
 from fp_check import *
 from RptMatrix import *
-from semiphore import *
+#from semiphore import *
 
 ############################################################
 # MatCalcExcep: An exception to throw when a calculation isn't working right.
@@ -49,7 +49,7 @@ def isQ(M):
     """Return True if M is a legitimate continuous MC matrix matrix.
     (That is, every off-diagonal element is non-negative, and row-sums are 0.)
     """
-    return isZero(M.sum(1)).all() and gteZero(-1*diag(q)).all() and gteZero(M - np.diag(M)*np.identity(4)).all()
+    return isZero(M.sum(1)).all() and gteZero(-1*diag(M)).all() and gteZero(M - diag(M)*identity(4)).all()
 
 
 ############################################################
