@@ -1,7 +1,7 @@
 """rpt_matrix.py: A RptMatrix class for storing needed information about individual repeats along with 
 their C matrix.  Will store these in psm files (pickled substitution matrix)"""
 
-from RMfileReader import *
+import RMfileReader 
 import os.path
 import argparse
 import pickle
@@ -76,7 +76,7 @@ def prmList2psm(prm_list, filter_file = None, filter_fun = lambda r: r.M.sum() >
 
 def prm2psm(chr, dir, psm_file, filter_file = None, filter_fun = lambda r: r.M.sum() >= 40):
     """Create a psm file from a prm file"""
-    L = unpickleRepeats(chr, dir)
+    L = RMfileReader.unpickleRepeats(chr, dir)
     print("L: ", len(L))
     S = {line.strip() for line in open(filter_file)} if filter_file else {}
     print("S: ", len(S))
@@ -104,7 +104,7 @@ def create_psm(prm_location = "/home/karroje/cache/human/hg18/seq/rmsk", filter_
     """Create all psm files locally.  By default: use location on Karro's computer."""
     for chr in range(22, 0, -1):
         print("File: ", chr)
-        prm2psm("chr%d" % chr, prm_location, psm_file = "chr%d.psm" % chr, filter_file = filter_file)
+        prm2psm("chr%d" % chr, prm_location, psm_file = prm_location +"/chr%dFromFileMaker.psm" % chr, filter_file = filter_file)
 
 if __name__ == "__main__": 
     prm_location = "/home/karroje/cache/human/hg18/seq/rmsk"

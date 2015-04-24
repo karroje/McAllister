@@ -1,3 +1,5 @@
+// Note page 102-105 of the HMM user guide will provide more detail, but this is a good summary
+since I keep losing the handwritten ones I made.
 HMMER3/f [3.1b1 | May 2013]
 NAME  testAlign
 LENG  20
@@ -8,7 +10,7 @@ MM    no
 CONS  yes
 CS    no
 MAP   yes
-DATE  Mon Apr 20 19:54:51 2015
+DATE  Mon Jan  5 21:28:55 2015
 NSEQ  5
 EFFN  5.000000
 CKSUM 468316054
@@ -17,11 +19,21 @@ STATS LOCAL VITERBI   -7.2143  0.77137
 STATS LOCAL FORWARD   -2.5455  0.77137
 HMM          A        C        G        T   
             m->m     m->i     m->d     i->m     i->i     d->m     d->d
-  COMPO   1.17919  1.41443  1.57247  1.41932
+  COMPO   1.17919  1.41443  1.57247  1.41932 // Not sure what this line is
+          1.38629  1.38629  1.38629  1.38629 // Emmision likely hood of initial insertion (not clear why this would be in model)
+          0.02817  4.27667  4.27667  1.46634  0.26236  0.00000        * // Tranisition probabilities of begin state to next place
+
+/* Now we should have M nodes for the M matched notes e.g. length above
+      1   2.68472  0.90991  2.82556  0.75518      1 t - - - // Match emissions one per alpha symbol in alphabetic order 
+/*  Next number represents the posiition ... the t represents the consensus character
+*The next 3 dashes represent flags in the header rf,mm,cs
+
+//The next line represents the probability of emissions if an insertion state is reached in the model
           1.38629  1.38629  1.38629  1.38629
-          0.02817  4.27667  4.27667  1.46634  0.26236  0.00000        *
-      1   2.68472  0.90991  2.82556  0.75518      1 t - - -
-          1.38629  1.38629  1.38629  1.38629
+/*The next line is the state transitions summarized above -- here is a more verbose description
+The seven fields on this line are the transitions for node k, in the order shown by the transition header line: Mk → Mk+1, Ik, Dk+1; Ik → Mk+1, Ik; Dk → Mk+1, Dk+1.
+For transitions from the final node M, match state M + 1 is interpreted as the END state E, and there is no delete state M + 1; therefore the final Mk → Dk+1 and Dk → Dk+1 transitions are always * (zero probability), and the final Dk → Mk+1 transition is always 0.0 (probability 1.0).
+
           0.02817  4.27667  4.27667  1.46634  0.26236  1.09861  0.40547
       2   3.39709  3.02431  3.53405  0.11794      2 t - - -
           1.38629  1.38629  1.38629  1.38629

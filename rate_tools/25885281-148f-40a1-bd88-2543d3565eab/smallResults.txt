@@ -1,0 +1,12 @@
+Scores	for	complete	hits:
+E-value	score	bias	Sequence	start	end	Description
+-------	------	-----	--------	-----	-----	-----------
+6.3e-06	17.1	0.7	testDNASeq	3823	3804
+7.1e-06	16.9	0.9	testDNASeq	3355	3374
+7.2e-06	16.9	0.9	testDNASeq	2848	2867
+7.2e-06	16.9	0.9	testDNASeq	2887	2906
+1.6e-05	15.9	0.4	testDNASeq	3043	3062
+3e-05	15.1	1.4	testDNASeq	2926	2945
+4.3e-05	14.6	1.7	testDNASeq	2965	2984
+0.00023	12.4	1.9	testDNASeq	3004	3023
+0.00093	10.6	0.9	testDNASeq	3316	3335

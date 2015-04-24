@@ -1,6 +1,6 @@
 from numpy import rate
 import operator
-from RptMatrix import *
+import RptMatrixMod
 import operator
 import pickle
 from asymm_tools import compute_d
@@ -16,7 +16,7 @@ class Partition:
         self.hmmChange = 0
         self.countMatrix = M
         if(M == None):
-            self.countMatrix = zeros((4,4))
+            self.countMatrix = RptMatrixMod.zeros((4,4))
     
     def calculateChange(self, rate=.6571): # default rate come from regression line in regression tab of DistToProb.xlsm
         #Example .6 calculated and .7 expected means more change
@@ -25,7 +25,7 @@ class Partition:
     
 class PartitionMaker:
     
-    def __init__(self, search= "AluSx" ,psm = "/Users/mcallimb/cache/human/hg18/seq/rmsk/chr1.psm", famFile = "../rpt_list.txt", famDist = "../GlobalIDs.txt"):
+    def __init__(self, search= "MIR" ,psm = "/Users/MikeMcAllister/cache/human/hg18/seq/rmsk/chr22FromFileMaker.psm", famFile = "../rpt_list.txt", famDist = "../GlobalIDs.txt"):
         self.searchRepeat = search
         self.psmFile = psm
         self.famFile = famFile
@@ -33,7 +33,7 @@ class PartitionMaker:
         self.familiesDict = self.createDict(self.famDistFile)
         self.includedFamDict ={}
         #self.familiesList = self.makeList() 
-        self.pruneFamilies(.01)
+        self.pruneFamilies(.1)
         self.currentPartition = Partition()
         self.partitionList =[]
     
@@ -60,7 +60,7 @@ class PartitionMaker:
             print("Trying to prune with unknown family")
         
     def createPartitions(self, repBasesPerPart = 50000, maxGap = 500000, maxBases = 2000000):
-        rpt_list = load_psm(self.psmFile)
+        rpt_list = RptMatrixMod.load_psm(self.psmFile)
         prevEnd = rpt_list[0].start
         self.currentPartition.startIndex = rpt_list[0].start
         for i in rpt_list:
@@ -119,7 +119,7 @@ class PartitionMaker:
             
         
     
-p = PartitionMaker()
-p.createPartitions()  
+#p = PartitionMaker()
+#p.createPartitions()  
     
     

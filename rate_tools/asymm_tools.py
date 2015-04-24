@@ -5,7 +5,7 @@ import threading
 import scipy.linalg
 from numpy import *
 from fp_check import *
-from RptMatrix import *
+from RptMatrixMod import *
 #from semiphore import *
 
 ############################################################
