@@ -67,7 +67,7 @@ class PartitionMaker:
             if i.class_name in self.includedFamDict:
                 # Place start index in partition if partition is empty
                 if(self.currentPartition.startIndex == 0):
-                   self.currentPartition.startIndex = i.start 
+                    self.currentPartition.startIndex = i.start 
                 # If the gaps between repeats is too high due to whatever start a new partition and combine the current
                 # one with the previous partition
                 if(i.start - prevEnd > maxGap):
@@ -88,6 +88,7 @@ class PartitionMaker:
                     self.finalizePartition(self.currentPartition)
                     self.partitionList.append(self.currentPartition)
                     self.currentPartition = Partition()
+                    self.currentPartition.startIndex= self.partitionList[-1].endIndex
                     
         index = 1
         for j in self.partitionList:

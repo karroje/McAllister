@@ -21,7 +21,7 @@ class hmmprofie:
         self.alphabet = splitLine[1:]
     
     def convertEmissionProbsToDecimal(self):
-        print self.emissionProbs
+        #print self.emissionProbs
         self.emissionDecimalProbs= []
         for x in range(len(self.emissionProbs)):
             self.emissionDecimalProbs.append([])
@@ -37,7 +37,7 @@ class hmmprofie:
                 LN = math.log(self.emissionDecimalProbs[x][y])
                 negLN = -1*LN
                 self.emissionProbs[x][y] = str(round(negLN,5))
-        print self.emissionProbs
+        #print self.emissionProbs
         
     def getConsensusIndex(self, indexNum):
         letter = self.emissionProbs[indexNum][5]
@@ -147,7 +147,7 @@ class hmmprofie:
     '''
     def addToDecimalEmissionProbs(self, amtToAdd, topThreshold = .96, bottomThreshold = .01, proportional = False):
         #check to see if input is reasonable
-        print self.emissionDecimalProbs
+        #print self.emissionDecimalProbs
         if amtToAdd > .75 or amtToAdd < -.75:
             raise Exception("The amount of change is outside the expected range")
         if topThreshold > 1 or topThreshold < .26:
@@ -164,7 +164,7 @@ class hmmprofie:
                                                  proportional, topThreshold, bottomThreshold)
             for j in range(len(self.emissionDecimalProbs[i])):
                 self.emissionDecimalProbs[i][j] += deltas[j]
-        print self.emissionDecimalProbs
+        #print self.emissionDecimalProbs
         
                 
     def readProbs(self, file):
@@ -230,10 +230,11 @@ class hmmprofie:
         file.write(self.transitionLine)
         self.writeProbs(file)
         file.write("//\n")
+        file.close()
     
-testProfile = hmmprofie()
-testProfile.parseFile("testHmm")
-testProfile.addToDecimalEmissionProbs(-.7)
-testProfile.addToDecimalEmissionProbs(.7)
-testProfile.convertDecimalProbsToEmission()
-testProfile.writeFile("HMMGreaterChange")
+#testProfile = hmmprofie()
+#testProfile.parseFile("testHmm")
+#testProfile.addToDecimalEmissionProbs(-.7)
+#testProfile.addToDecimalEmissionProbs(.7)
+#testProfile.convertDecimalProbsToEmission()
+#testProfile.writeFile("HMMGreaterChange")
