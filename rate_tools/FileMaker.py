@@ -61,7 +61,7 @@ def changeBases(line, offset):
     if(validResultLine(line)):
         pieces[5] = str(int(pieces[5]) + offset)
         pieces[4] = str(int(pieces[4]) + offset)
-    line = "\t".join(pieces) + "\n"
+    line = "   ".join(pieces) + "\n"
     return line
 
 def countBases(line):
@@ -141,12 +141,12 @@ def createFiles(startingFasta, startingHMM, resFolder=None, fileInfo = None):
     os.makedirs(seqFolder)
     if (resFolder != None):
         os.makedirs(resFolder)
-    #partitioner = DNAPartitioner.PartitionMaker()
-    #partitioner.createPartitions() 
-    #partFile = open("partFile", "wb")
+    partitioner = DNAPartitioner.PartitionMaker()
+    partitioner.createPartitions() 
+    partFile = open("partFile", "wb")
     #pickle.dump(partitioner,partFile)
-    partFileRead =  open("partFile",'r')
-    partitioner = pickle.load(partFileRead)
+    #partFileRead =  open("partFile",'r')
+    #partitioner = pickle.load(partFileRead)
     hmmOrig = HMMEditor.hmmprofie()
     hmmOrig.parseFile(startingHMM)
     fastaStub = populateFastaFiles(partitioner.partitionList, seqFolder, startingFasta)

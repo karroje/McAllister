@@ -21,11 +21,11 @@ class Partition:
     def calculateChange(self, rate=.6571): # default rate come from regression line in regression tab of DistToProb.xlsm
         #Example .6 calculated and .7 expected means more change
         # this implies a negative number so Hmm should have lower percentages
-        return (self.calculatedD - (self.weightedD/self.numRepeatBases))*rate
+        return ((self.weightedD/self.numRepeatBases) - self.calculatedD)*rate*-1
     
 class PartitionMaker:
     
-    def __init__(self, search= "MIR" ,psm = "/Users/MikeMcAllister/cache/human/hg18/seq/rmsk/chr22FromFileMaker.psm", famFile = "../rpt_list.txt", famDist = "../GlobalIDs.txt"):
+    def __init__(self, search= "MIR" ,psm = "/Users/MikeMcAllister/cache/human/hg18/seq/rmsk/chr11FromFileMaker.psm", famFile = "../rpt_list.txt", famDist = "../GlobalIDs.txt"):
         self.searchRepeat = search
         self.psmFile = psm
         self.famFile = famFile

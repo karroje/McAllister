@@ -145,7 +145,7 @@ class hmmprofie:
     than any other letter.   If it does go below any other letters each letter is set to the average 
     of the set.  These checks should be irrelevant in most common cases 
     '''
-    def addToDecimalEmissionProbs(self, amtToAdd, topThreshold = .96, bottomThreshold = .01, proportional = False):
+    def addToDecimalEmissionProbs(self, amtToAdd, topThreshold = .96, bottomThreshold = .01, proportional = True):
         #check to see if input is reasonable
         #print self.emissionDecimalProbs
         if amtToAdd > .75 or amtToAdd < -.75:

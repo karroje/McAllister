@@ -27,7 +27,7 @@ class HmmerInfo:
 		#commandList = ["/Users/MikeMcAllister/Google Drive/Grad/Research/hmmer-3.1b1-macosx-intel/binaries/nhmmer", "--dna", self.hmmFile, self.seqFile]
 		commandList = [self.hmmbuild_location+"nhmmer", "--dna", self.hmmFile, self.seqFile]
 		outFile = open(self.resultRepeatsFile,"w")
-		subprocess.Popen(commandList, stdout = outFile)
+		return subprocess.Popen(commandList, stdout = outFile)
 
 
 if __name__ == "__main__":		
