@@ -12,6 +12,7 @@ class Partition:
         self.endIndex = e # Ending index in Chromosone
         self.numRepeatBases = b #Number of repeat bases in Partition
         self.calculatedD =  cD #Distance based on counts
+        self.calculatedD2 = cD
         self.weightedD = eD
         self.hmmChange = 0
         self.countMatrix = M
@@ -21,7 +22,8 @@ class Partition:
     def calculateChange(self, rate=.6571): # default rate come from regression line in regression tab of DistToProb.xlsm
         #Example .6 calculated and .7 expected means more change
         # this implies a negative number so Hmm should have lower percentages
-        return ((self.weightedD/self.numRepeatBases) - self.calculatedD)*rate*-1
+        return ((self.weightedD/self.numRepeatBases) - self.calculatedD)*rate
+        #return ((self.weightedD/self.numRepeatBases) - self.calculatedD2/self.numRepeatBases)*rate*-1
     
 class PartitionMaker:
     
@@ -59,7 +61,7 @@ class PartitionMaker:
         else:
             print("Trying to prune with unknown family")
         
-    def createPartitions(self, repBasesPerPart = 50000, maxGap = 500000, maxBases = 2000000):
+    def createPartitions(self, repBasesPerPart = 50000, maxGap = 500000, maxBases = 1000000):
         rpt_list = RptMatrixMod.load_psm(self.psmFile)
         prevEnd = rpt_list[0].start
         self.currentPartition.startIndex = rpt_list[0].start
@@ -70,26 +72,46 @@ class PartitionMaker:
                     self.currentPartition.startIndex = i.start 
                 # If the gaps between repeats is too high due to whatever start a new partition and combine the current
                 # one with the previous partition
-                if(i.start - prevEnd > maxGap):
-                    if(len(self.partitionList) > 0 and 
-                       self.currentPartition.startIndex - self.partitionList[-1].endIndex < maxGap):
-                        self.partitionList[-1] = self.combinePartitions(self.partitionList[-1], self.currentPartition)
-                    # reset partition
-                    self.currentPartition = Partition()
-                
+                self.testGap(prevEnd, i, maxGap)
+                self.testMaxDistanceBases(i, maxBases)
                 self.currentPartition.endIndex = i.finish
                 self.currentPartition.countMatrix +=i.M
                 self.currentPartition.numRepeatBases += i.finish - i.start
+                i.M = self.testNegativeDiagonal(i.M)
+                self.currentPartition.calculatedD2 += (i.finish - i.start)*compute_d(compute_P(i.M))
                 # Add to the numerator of what will be a weighted value
                 self.currentPartition.weightedD += (i.finish - i.start)*self.familiesDict[i.class_name]
                 prevEnd = i.finish
                 # If number of bases is achieved create the partition
-                if(self.currentPartition.numRepeatBases > repBasesPerPart):
-                    self.finalizePartition(self.currentPartition)
-                    self.partitionList.append(self.currentPartition)
-                    self.currentPartition = Partition()
-                    self.currentPartition.startIndex= self.partitionList[-1].endIndex
+                self.testTotalBases(repBasesPerPart)
+    
+    def testMaxDistanceBases(self, repeat, maxBases):
+        if(repeat.finish - self.currentPartition.startIndex > maxBases):
+            self.createNewPartition()
+            self.currentPartition.startIndex= repeat.start
+            
+    
+    def endPartition(self):
+        self.finalizePartition(self.currentPartition)
+        self.partitionList.append(self.currentPartition)
+    def createNewPartition(self):           
+        self.currentPartition = Partition()
+        self.currentPartition.startIndex= self.partitionList[-1].endIndex
+        
+    def testTotalBases(self, repBasesPerPart):
+        if(self.currentPartition.numRepeatBases > repBasesPerPart):
+            self.endPartition()
+            self.createNewPartition()
+            
+    def testGap(self, prevEnd, repeat, maxGap):
+        if(repeat.start - prevEnd > maxGap):
+            if(len(self.partitionList) > 0 and 
+               self.currentPartition.startIndex - self.partitionList[-1].endIndex < maxGap):
+                self.partitionList[-1] = self.combinePartitions(self.partitionList[-1], self.currentPartition)
+                    # reset partition
+                self.createNewPartition()
                     
+    def printPartitionList(self):
         index = 1
         for j in self.partitionList:
             print("Partion " + str(index) + ": Start " + str(j.startIndex) + "; End: " + str(j.endIndex)
@@ -108,7 +130,16 @@ class PartitionMaker:
         
         return p1
                     
-                
+    def testNegativeDiagonal(self, matrix):
+        if(matrix[0][0] == 0):
+           matrix[0][0] = 1 
+        if(matrix[1][1] == 0):
+           matrix[1][1] = 1    
+        if(matrix[2][2] == 0):
+           matrix[2][2] = 1 
+        if(matrix[3][3] == 0):
+           matrix[3][3] = 1
+        return matrix       
                 
     # Calculates the distances based on the counts    
     def finalizePartition(self,part):

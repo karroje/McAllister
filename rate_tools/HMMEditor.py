@@ -231,9 +231,16 @@ class hmmprofie:
         self.writeProbs(file)
         file.write("//\n")
         file.close()
+    def writeConsensusSequence(self, fileName):
+        file = open(fileName,"w")
+        file.write("> " + fileName + "\n")
+        for x in range(1,len(self.emissionProbs)):
+            print(x)
+            file.write(self.alphabet[self.getConsensusIndex(x)])
     
-#testProfile = hmmprofie()
-#testProfile.parseFile("testHmm")
+testProfile = hmmprofie()
+testProfile.parseFile("./HMMs/tigger8.hmm")
+testProfile.writeConsensusSequence("./HMMs/tigger8.fa")
 #testProfile.addToDecimalEmissionProbs(-.7)
 #testProfile.addToDecimalEmissionProbs(.7)
 #testProfile.convertDecimalProbsToEmission()

@@ -143,6 +143,7 @@ def createFiles(startingFasta, startingHMM, resFolder=None, fileInfo = None):
         os.makedirs(resFolder)
     partitioner = DNAPartitioner.PartitionMaker()
     partitioner.createPartitions() 
+    partitioner.printPartitionList()
     partFile = open("partFile", "wb")
     #pickle.dump(partitioner,partFile)
     #partFileRead =  open("partFile",'r')
