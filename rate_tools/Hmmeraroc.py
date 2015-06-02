@@ -15,8 +15,9 @@ class FileInfo:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    # Edit to be simulated results
     parser.add_argument('-f', action='store', dest='fastaFile',
-                    default = "./FastaFiles/chr11.fa", help='Set Fasta File')
+                    default = "./FastaFiles/simulation.fa", help='Set Fasta File')
     parser.add_argument('-m', action='store', dest='hmmFile',
                     default = "./HMMs/MIR.hmm", help='Set Orig HMM file')
     parser.add_argument('-p', action='store', dest='HMMERPATH',

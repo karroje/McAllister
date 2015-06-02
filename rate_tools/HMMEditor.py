@@ -1,7 +1,7 @@
 import math
 
     
-class hmmprofie:
+class hmmprofile:
     def __init__(self):
         self.name = "tempName"
         self.firstline =""
@@ -238,7 +238,7 @@ class hmmprofie:
             print(x)
             file.write(self.alphabet[self.getConsensusIndex(x)])
     
-testProfile = hmmprofie()
+testProfile = hmmprofile()
 testProfile.parseFile("./HMMs/tigger8.hmm")
 testProfile.writeConsensusSequence("./HMMs/tigger8.fa")
 #testProfile.addToDecimalEmissionProbs(-.7)
