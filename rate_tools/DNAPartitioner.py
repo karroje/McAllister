@@ -92,6 +92,7 @@ class PartitionMaker:
             
     
     def endPartition(self):
+        print(self.currentPartition.countMatrix)
         self.finalizePartition(self.currentPartition)
         self.partitionList.append(self.currentPartition)
     def createNewPartition(self):           

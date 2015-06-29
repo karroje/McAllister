@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Edit to be simulated results
     parser.add_argument('-f', action='store', dest='fastaFile',
-                    default = "./FastaFiles/simulation.fa", help='Set Fasta File')
+                    default = "./FastaFiles/simulationDVal.fa", help='Set Fasta File')
     parser.add_argument('-m', action='store', dest='hmmFile',
                     default = "./HMMs/MIR.hmm", help='Set Orig HMM file')
     parser.add_argument('-p', action='store', dest='HMMERPATH',
@@ -25,10 +25,13 @@ if __name__ == "__main__":
     res = "./HMMResults" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') +"/"
     parser.add_argument('-r', action='store', dest='resultsFolder',
                     default = res, help='Where results will be located')
+    parser.add_argument('-s', action='store', dest='psmFile',
+                    default = "./PSMs/simulationDVal.psm", help='Where PSM file is located')
     results = parser.parse_args()
     
     fInfo = FileInfo()
-    FileMaker.createFiles(results.fastaFile, results.hmmFile, results.resultsFolder, fInfo)
+    FileMaker.createFiles(results.fastaFile, results.hmmFile,
+                          results.psmFile, results.resultsFolder, fInfo)
     
     procs = []
     for index in xrange(len(fInfo.partitions)):

@@ -133,7 +133,7 @@ def populateHMMFiles(partitions, hmmFolder, origHmm, startFile):
         index +=1
     return  origHmm.name[:-1] + lastPart + "Part" 
     
-def createFiles(startingFasta, startingHMM, resFolder=None, fileInfo = None):
+def createFiles(startingFasta, startingHMM, psmFile, resFolder=None, fileInfo = None):
     folder = maketempDirectory()
     hmmFolder = folder+"Hmms/"
     os.makedirs(hmmFolder)
@@ -141,7 +141,7 @@ def createFiles(startingFasta, startingHMM, resFolder=None, fileInfo = None):
     os.makedirs(seqFolder)
     if (resFolder != None):
         os.makedirs(resFolder)
-    partitioner = DNAPartitioner.PartitionMaker(psm="./PSMs/simulation.psm")
+    partitioner = DNAPartitioner.PartitionMaker(psm=psmFile)
     partitioner.createPartitions() 
     partitioner.printPartitionList()
     partFile = open("partFile", "wb")
