@@ -1,5 +1,7 @@
 import math
-
+from numpy import zeros
+from asymm_tools import compute_d
+from asymm_tools import compute_P
     
 class hmmprofile:
     def __init__(self):
@@ -148,6 +150,7 @@ class hmmprofile:
     def addToDecimalEmissionProbs(self, amtToAdd, topThreshold = .96, bottomThreshold = .01, proportional = True):
         #check to see if input is reasonable
         #print self.emissionDecimalProbs
+        print("amtToAdd: " + str(amtToAdd))
         if amtToAdd > .75 or amtToAdd < -.75:
             raise Exception("The amount of change is outside the expected range")
         if topThreshold > 1 or topThreshold < .26:
@@ -238,10 +241,25 @@ class hmmprofile:
             print(x)
             file.write(self.alphabet[self.getConsensusIndex(x)])
     
+    def generateExpectedCountMatrix(self):
+        cntMat = zeros((4,4))
+        for x in range(1,len(self.emissionDecimalProbs)):
+            row = self.getConsensusIndex(x)
+            for j in range(4):
+                cntMat[row][j] = self.emissionDecimalProbs[x][j]*100
+        return cntMat
+        
 testProfile = hmmprofile()
-testProfile.parseFile("./HMMs/tigger8.hmm")
-testProfile.writeConsensusSequence("./HMMs/tigger8.fa")
+testProfile.parseFile("./HMMs/MER115.hmm")
+#testProfile.writeConsensusSequence("./HMMs/tigger8.fa")
+print(testProfile.emissionDecimalProbs)
+print(testProfile.generateExpectedCountMatrix())
 #testProfile.addToDecimalEmissionProbs(-.7)
 #testProfile.addToDecimalEmissionProbs(.7)
 #testProfile.convertDecimalProbsToEmission()
 #testProfile.writeFile("HMMGreaterChange")
+testProfile2 = hmmprofile()
+testProfile2.parseFile("./HMMs/MIR100simulationPart13")
+#testProfile.writeConsensusSequence("./HMMs/tigger8.fa")
+print(testProfile2.emissionDecimalProbs)
+print(testProfile2.generateExpectedCountMatrix())

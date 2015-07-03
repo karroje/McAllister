@@ -5,13 +5,13 @@ import random
 import numpy
 from Bio.Nexus.Trees import consensus
 class SimulationContainer:
-    def __init__(self, start = .25, end = .7,incr = .01):
-        self.otherRepeatFileNames = ["./HMMs/LTR16a.hmm","./HMMs/MARNA.hmm","./HMMs/MER115.hmm","./HMMs/mlt1l.hmm", "./HMMs/tigger8.hmm"]
+    def __init__(self, start = .4, end = .55,incr = .005):
+        self.otherRepeatFileNames = ["./HMMs/LTR16a.hmm","./HMMs/MARNA.hmm","./HMMs/MIR.hmm","./HMMs/mlt1l.hmm", "./HMMs/tigger8.hmm"]
         self.repeatHMMs = self.retrieveRepeatList(self.otherRepeatFileNames)
         self.startPercentChange = start
         self.endPercentChange = end
         self.percentIncrement = incr
-        self.repeatToFind = self.retrieveHMM("./HMMs/MIR.hmm")
+        self.repeatToFind = self.retrieveHMM("./HMMs/MER115.hmm")
         
         
     def retrieveHMM(self, fileName):
@@ -112,9 +112,13 @@ class SimulationContainer:
                 #Place Random Sequnce and repeat to find
                 seq = self.generateRandomSequence()
                 fastaSeq = self.insertRepeatSequence(seq, fastaSeq)
+                begin = len(fastaSeq)
                 seq = self.modifySequence(self.repeatToFind, percentChange)
                 fastaSeq = self.insertRepeatSequence(seq, fastaSeq)
-                #place in other repeats
+                end = len(fastaSeq)
+                print("RepeatNum: " + str(i*17+k) + ", begin: " + str(begin + 1) + ", end: " + str(end))
+                #print(seq)
+                #place in other repeat
                 for j in self.repeatHMMs:
                     seq = self.generateRandomSequence()
                     fastaSeq = self.insertRepeatSequence(seq, fastaSeq)
@@ -126,8 +130,8 @@ class SimulationContainer:
             
             percentChange += self.percentIncrement
             
-        self.writePSMFile("./PSMs/simulationDVal.psm", repeatList)
-        self.writeFastaSequence("./FastaFiles/simulationDval.fa", fastaSeq)
+        self.writePSMFile("./PSMs/simulation.psm", repeatList)
+        self.writeFastaSequence("./FastaFiles/simulation.fa", fastaSeq)
         
 sc = SimulationContainer()          
 sc.populateFiles()

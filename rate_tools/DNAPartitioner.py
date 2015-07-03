@@ -84,7 +84,8 @@ class PartitionMaker:
                 prevEnd = i.finish
                 # If number of bases is achieved create the partition
                 self.testTotalBases(repBasesPerPart)
-    
+        self.combinePartitions(self.partitionList[-1], self.currentPartition,)
+        
     def testMaxDistanceBases(self, repeat, maxBases):
         if(repeat.finish - self.currentPartition.startIndex > maxBases):
             self.createNewPartition()

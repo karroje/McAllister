@@ -17,16 +17,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Edit to be simulated results
     parser.add_argument('-f', action='store', dest='fastaFile',
-                    default = "./FastaFiles/simulationDVal.fa", help='Set Fasta File')
+                    default = "./FastaFiles/simulation.fa", help='Set Fasta File')
     parser.add_argument('-m', action='store', dest='hmmFile',
-                    default = "./HMMs/MIR.hmm", help='Set Orig HMM file')
+                    default = "./HMMs/MER115.hmm", help='Set Orig HMM file')
     parser.add_argument('-p', action='store', dest='HMMERPATH',
                     default = "/usr/local/bin/", help='Path to HMM software')
     res = "./HMMResults" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') +"/"
     parser.add_argument('-r', action='store', dest='resultsFolder',
                     default = res, help='Where results will be located')
     parser.add_argument('-s', action='store', dest='psmFile',
-                    default = "./PSMs/simulationDVal.psm", help='Where PSM file is located')
+                    default = "./PSMs/simulation.psm", help='Where PSM file is located')
     results = parser.parse_args()
     
     fInfo = FileInfo()
@@ -69,5 +69,6 @@ if __name__ == "__main__":
             print("Same results.  Partition: " + str(index))
         print(str(modResults[0]) + " : " + str(origResults[0]) + " : "  + str(part.calculateChange()))
     print(str(repBasesMod) + " : " + str(repBasesOrig))
-        
+    FileMaker.aggregrateResultFiles(results.resultsFolder, ".rescleaned")   
+    FileMaker.aggregrateResultFiles(results.resultsFolder, ".resorigcleaned")  
     

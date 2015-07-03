@@ -19,8 +19,23 @@ def maketempDirectory():
     os.makedirs(tempFileName)
     return tempFileName
 
-
-
+def aggregrateResultFiles(resultsFolder, ext):
+    aggFile = open(resultsFolder+"Cumulative" +ext,'w')
+    fileNames = os.listdir(resultsFolder)
+    fileNum = 0
+    fileCheck = str(fileNum) + ext
+    while ( fileCheck in fileNames):
+        fh = open(resultsFolder+fileCheck,'r')
+        lineNum = 0
+        for line in fh:
+            if lineNum > 2 and line.strip():
+                aggFile.write(line)
+            lineNum +=1
+        
+        fileNum +=1
+        fileCheck = str(fileNum) + ext
+         
+    
 def parseResultsFile(infile, outFile, startIndex):
     summary = False
     startLine = "Scores for complete hits:"
@@ -109,6 +124,7 @@ def makeFastaFile(part, fh, fileName, lastCharIndex,seqFolder):
 
 def populateFastaFiles(partitionList,seqFolder, startFile):
     fh = open(startFile,'r')
+    fh.readline()
     index = 0
     lastCharIndex = 0
     lastPart = startFile.split("/")[-1].split(".")[0]
