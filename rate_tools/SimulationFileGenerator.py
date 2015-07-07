@@ -3,7 +3,6 @@ import pickle
 import RptMatrixMod
 import random
 import numpy
-from Bio.Nexus.Trees import consensus
 class SimulationContainer:
     def __init__(self, start = .25, end = .4,incr = .005):
         self.otherRepeatFileNames = ["./HMMs/LTR16a.hmm","./HMMs/MARNA.hmm","./HMMs/MER115.hmm","./HMMs/mlt1l.hmm", "./HMMs/tigger8.hmm"]

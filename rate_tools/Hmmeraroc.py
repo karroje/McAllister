@@ -3,6 +3,7 @@ import FileMaker
 import argparse
 import datetime
 import os.path
+import SimulationResultSummary
 
 class FileInfo:
     def __init__(self):
@@ -54,6 +55,7 @@ if __name__ == "__main__":
     #Gather results
     repBasesMod = 0
     repBasesOrig = 0
+    changeList  = []
     for index in xrange(len(fInfo.partitions)):
         p = procs[index*2]
         part = fInfo.partitions[index]
@@ -73,7 +75,11 @@ if __name__ == "__main__":
         else:
             print("Same results.  Partition: " + str(index))
         print(str(modResults[0]) + " : " + str(origResults[0]) + " : "  + str(part.calculateChange()))
+        changeList.append(part.calculateChange())
     print(str(repBasesMod) + " : " + str(repBasesOrig))
     FileMaker.aggregrateResultFiles(results.resultsFolder, ".rescleaned")   
-    FileMaker.aggregrateResultFiles(results.resultsFolder, ".resorigcleaned")  
+    FileMaker.aggregrateResultFiles(results.resultsFolder, ".resorigcleaned") 
+    SimulationResultSummary.SimulationResultSummary(results.resultsFolder + "Cumulative.rescleaned", 
+                                                    results.resultsFolder + "Cumulative.resorigcleaned",
+                                                    changeList = changeList) 
     
