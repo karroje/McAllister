@@ -1,0 +1,7 @@
+fh = open("test.txt","r")
+s = fh.read(19)
+print(s + "1")
+print(not s)
+s = fh.read(19)
+print(s +"2")
+print(not s)
