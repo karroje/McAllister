@@ -6,6 +6,7 @@ from asymm_tools import compute_P
 class hmmprofile:
     def __init__(self):
         self.name = "tempName"
+        self.repeatLength = 0
         self.firstline =""
         self.transitionLine = ""
         self.header = ""
@@ -44,7 +45,12 @@ class hmmprofile:
     def getConsensusIndex(self, indexNum):
         letter = self.emissionProbs[indexNum][5]
         letter = letter.upper()
-        return self.alphabet.index(letter)
+        index = -1
+        try:
+            index = self.alphabet.index(letter)
+        except Exception:
+            pass
+        return index
     
     def assignProportions(self, probs, consensusIndex, amtToAdd):
         sum = 0
@@ -159,14 +165,15 @@ class hmmprofile:
             raise Exception("The bottomThreshold is outside the expected range")
         for i in range(1,len(self.emissionDecimalProbs)):
             index = self.getConsensusIndex(i)
-            currentProb = self.emissionDecimalProbs[i][index]
-            amtToAddIndex = amtToAdd
-            if currentProb + amtToAdd > topThreshold:
-                amtToAddIndex = topThreshold - currentProb
-            deltas = self.determineDeltaChanges(self.emissionDecimalProbs[i], index, amtToAddIndex,
-                                                 proportional, topThreshold, bottomThreshold)
-            for j in range(len(self.emissionDecimalProbs[i])):
-                self.emissionDecimalProbs[i][j] += deltas[j]
+            if index > -1:
+                currentProb = self.emissionDecimalProbs[i][index]
+                amtToAddIndex = amtToAdd
+                if currentProb + amtToAdd > topThreshold:
+                    amtToAddIndex = topThreshold - currentProb
+                deltas = self.determineDeltaChanges(self.emissionDecimalProbs[i], index, amtToAddIndex,
+                                                     proportional, topThreshold, bottomThreshold)
+                for j in range(len(self.emissionDecimalProbs[i])):
+                    self.emissionDecimalProbs[i][j] += deltas[j]
         #print self.emissionDecimalProbs
         
                 
@@ -180,7 +187,9 @@ class hmmprofile:
             self.transitionProbs.append(tmpLine.split()[:])
             tmpLine = file.readline()
         self.convertEmissionProbsToDecimal()
-        self.convertDecimalProbsToEmission()    
+        self.convertDecimalProbsToEmission()  
+        self.repeatLength = len(self.emissionDecimalProbs) - 1
+          
     def testDecimalProbs(self):
         for x in self.emissionDecimalProbs:
             sum = 0;
@@ -202,6 +211,7 @@ class hmmprofile:
         self.defineAlphabet(tmpLine)
         self.transitionLine = file.readline()
         self.readProbs(file)
+        
     def writeAlphabet(self,file):
         #ten spaces as per sample
         tmpStr="HMM          "
@@ -238,28 +248,31 @@ class hmmprofile:
         file = open(fileName,"w")
         file.write("> " + fileName + "\n")
         for x in range(1,len(self.emissionProbs)):
-            print(x)
-            file.write(self.alphabet[self.getConsensusIndex(x)])
+            base ='N'
+            consensusIndex = self.getConsensusIndex(x)
+            if consensusIndex > -1:
+                base = self.alphabet[consensusIndex]
+            file.write(base)
     
     def generateExpectedCountMatrix(self):
         cntMat = zeros((4,4))
         for x in range(1,len(self.emissionDecimalProbs)):
             row = self.getConsensusIndex(x)
-            for j in range(4):
-                cntMat[row][j] = self.emissionDecimalProbs[x][j]*100
+            if row > -1:
+                for j in range(4):
+                    cntMat[row][j] = self.emissionDecimalProbs[x][j]*100
         return cntMat
         
-testProfile = hmmprofile()
-testProfile.parseFile("./HMMs/MER115.hmm")
-#testProfile.writeConsensusSequence("./HMMs/tigger8.fa")
-print(testProfile.emissionDecimalProbs)
-print(testProfile.generateExpectedCountMatrix())
+#testProfile = hmmprofile()
+#testProfile.parseFile("./HMMs/ERV24_Prim.hmm")
+#print(testProfile.emissionDecimalProbs)
+#print(testProfile.generateExpectedCountMatrix())
 #testProfile.addToDecimalEmissionProbs(-.7)
 #testProfile.addToDecimalEmissionProbs(.7)
 #testProfile.convertDecimalProbsToEmission()
 #testProfile.writeFile("HMMGreaterChange")
-testProfile2 = hmmprofile()
-testProfile2.parseFile("./HMMs/MIR100simulationPart13")
+#testProfile2 = hmmprofile()
+#testProfile2.parseFile("./HMMs/MIR100simulationPart13")
 #testProfile.writeConsensusSequence("./HMMs/tigger8.fa")
-print(testProfile2.emissionDecimalProbs)
-print(testProfile2.generateExpectedCountMatrix())
+#print(testProfile2.emissionDecimalProbs)
+#print(testProfile2.generateExpectedCountMatrix())

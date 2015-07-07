@@ -5,13 +5,14 @@ import random
 import numpy
 from Bio.Nexus.Trees import consensus
 class SimulationContainer:
-    def __init__(self, start = .4, end = .55,incr = .005):
-        self.otherRepeatFileNames = ["./HMMs/LTR16a.hmm","./HMMs/MARNA.hmm","./HMMs/MIR.hmm","./HMMs/mlt1l.hmm", "./HMMs/tigger8.hmm"]
+    def __init__(self, start = .25, end = .4,incr = .005):
+        self.otherRepeatFileNames = ["./HMMs/LTR16a.hmm","./HMMs/MARNA.hmm","./HMMs/MER115.hmm","./HMMs/mlt1l.hmm", "./HMMs/tigger8.hmm"]
         self.repeatHMMs = self.retrieveRepeatList(self.otherRepeatFileNames)
         self.startPercentChange = start
         self.endPercentChange = end
         self.percentIncrement = incr
-        self.repeatToFind = self.retrieveHMM("./HMMs/MER115.hmm")
+        self.repeatToFind = self.retrieveHMM("./HMMs/MADE2.hmm")
+        self.repeatIndicesFile = "simulationRepeatIndices.csv"
         
         
     def retrieveHMM(self, fileName):
@@ -105,6 +106,7 @@ class SimulationContainer:
     def populateFiles(self):
         numRegions = int((self.endPercentChange - self.startPercentChange)/self.percentIncrement + 1)
         percentChange = self.startPercentChange
+        indexFile = open(self.repeatIndicesFile,"w")
         fastaSeq = ""
         repeatList = []
         for i in range(numRegions):
@@ -116,7 +118,8 @@ class SimulationContainer:
                 seq = self.modifySequence(self.repeatToFind, percentChange)
                 fastaSeq = self.insertRepeatSequence(seq, fastaSeq)
                 end = len(fastaSeq)
-                print("RepeatNum: " + str(i*17+k) + ", begin: " + str(begin + 1) + ", end: " + str(end))
+                #print("RepeatNum: " + str(i*17+k) + ", begin: " + str(begin + 1) + ", end: " + str(end))
+                indexFile.write(str(begin +1) + ", " + str(end) +"\n")
                 #print(seq)
                 #place in other repeat
                 for j in self.repeatHMMs:

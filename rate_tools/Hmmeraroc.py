@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parser.add_argument('-f', action='store', dest='fastaFile',
                     default = "./FastaFiles/simulation.fa", help='Set Fasta File')
     parser.add_argument('-m', action='store', dest='hmmFile',
-                    default = "./HMMs/MER115.hmm", help='Set Orig HMM file')
+                    default = "./HMMs/MADE2.hmm", help='Set Orig HMM file')
     parser.add_argument('-p', action='store', dest='HMMERPATH',
                     default = "/usr/local/bin/", help='Path to HMM software')
     res = "./HMMResults" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') +"/"
@@ -30,10 +30,14 @@ if __name__ == "__main__":
     results = parser.parse_args()
     
     fInfo = FileInfo()
+    
+    #Create the Files to run
     FileMaker.createFiles(results.fastaFile, results.hmmFile,
                           results.psmFile, results.resultsFolder, fInfo)
     
     procs = []
+    
+    # Fork the processes to run 
     for index in xrange(len(fInfo.partitions)):
         part = fInfo.partitions[index]
         hmmFile = fInfo.hmmFolder + fInfo.hmmStub + str(index) 
@@ -46,7 +50,8 @@ if __name__ == "__main__":
         procs.append(hmmerInterOrig.findResults())
         procs[-2].wait()
         procs[-1].wait()
-        
+    
+    #Gather results
     repBasesMod = 0
     repBasesOrig = 0
     for index in xrange(len(fInfo.partitions)):
