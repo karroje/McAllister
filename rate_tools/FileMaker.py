@@ -119,7 +119,7 @@ def makeFastaFile(part, fh, fileName, lastCharIndex,seqFolder):
     fh2.close
     charRead += part.endIndex - part.startIndex + 1
     #print(charRead)
-    return part.endIndex
+    return part.endIndex + 1
     
 
 def populateFastaFiles(partitionList,seqFolder, startFile):

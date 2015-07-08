@@ -76,7 +76,7 @@ class PartitionMaker:
                 self.testMaxDistanceBases(i, maxBases)
                 self.currentPartition.endIndex = i.finish
                 self.currentPartition.countMatrix +=i.M
-                self.currentPartition.numRepeatBases += i.finish - i.start
+                self.currentPartition.numRepeatBases += i.finish - i.start + 1
                 i.M = self.testNegativeDiagonal(i.M)
                 self.currentPartition.calculatedD2 += (i.finish - i.start)*compute_d(compute_P(i.M))
                 # Add to the numerator of what will be a weighted value
@@ -98,7 +98,7 @@ class PartitionMaker:
         self.partitionList.append(self.currentPartition)
     def createNewPartition(self):           
         self.currentPartition = Partition()
-        self.currentPartition.startIndex= self.partitionList[-1].endIndex
+        self.currentPartition.startIndex= self.partitionList[-1].endIndex + 1
         
     def testTotalBases(self, repBasesPerPart):
         if(self.currentPartition.numRepeatBases > repBasesPerPart):

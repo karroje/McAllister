@@ -4,7 +4,7 @@ import RptMatrixMod
 import random
 import numpy
 class SimulationContainer:
-    def __init__(self, start = .25, end = .4,incr = .005):
+    def __init__(self, start = .25, end = .4,incr = .01):
         self.otherRepeatFileNames = ["./HMMs/LTR16a.hmm","./HMMs/MARNA.hmm","./HMMs/MER115.hmm","./HMMs/mlt1l.hmm", "./HMMs/tigger8.hmm"]
         self.repeatHMMs = self.retrieveRepeatList(self.otherRepeatFileNames)
         self.startPercentChange = start

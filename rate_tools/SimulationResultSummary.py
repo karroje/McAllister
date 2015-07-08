@@ -91,11 +91,11 @@ class SimulationResultSummary:
                                 + str(self.partitionChangeList[partStats.index])
                                 + "\n")
         
-        summaryHandle.write("Bases Matched: " + str(partStats.repeatBasesMatched) + "\n")
-        summaryHandle.write("Total Bases: " + str(partStats.repeatBasesPresent) + "\n")
-        summaryHandle.write("Bases Missed: " + str(partStats.repeatBasesPresent -
+        summaryHandle.write("\tBases Matched: " + str(partStats.repeatBasesMatched) + "\n")
+        summaryHandle.write("\tTotal Bases: " + str(partStats.repeatBasesPresent) + "\n")
+        summaryHandle.write("\tBases Missed: " + str(partStats.repeatBasesPresent -
                             partStats.repeatBasesMatched) + "\n")
-        summaryHandle.write("Bases Incorrectly identified: " +
+        summaryHandle.write("\tBases Incorrectly identified: " +
                             str(partStats.repeatBasesIdentified - 
                                 partStats.repeatBasesMatched)+ "\n")
         
