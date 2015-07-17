@@ -157,7 +157,8 @@ def createFiles(startingFasta, startingHMM, psmFile, resFolder=None, fileInfo = 
     os.makedirs(seqFolder)
     if (resFolder != None):
         os.makedirs(resFolder)
-    partitioner = DNAPartitioner.PartitionMaker(psm=psmFile)
+    hmmName = startingHMM.split("/")[-1].split(".")[0]
+    partitioner = DNAPartitioner.PartitionMaker(search = hmmName, psm=psmFile)
     partitioner.createPartitions() 
     partitioner.printPartitionList()
     partFile = open("partFile", "wb")

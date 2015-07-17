@@ -35,7 +35,7 @@ class PartitionMaker:
         self.familiesDict = self.createDict(self.famDistFile)
         self.includedFamDict ={}
         #self.familiesList = self.makeList() 
-        self.pruneFamilies(.1)
+        self.pruneFamilies(.5)
         self.currentPartition = Partition()
         self.partitionList =[]
     
@@ -93,7 +93,7 @@ class PartitionMaker:
             
     
     def endPartition(self):
-        print(self.currentPartition.countMatrix)
+        #print(self.currentPartition.countMatrix)
         self.finalizePartition(self.currentPartition)
         self.partitionList.append(self.currentPartition)
     def createNewPartition(self):           

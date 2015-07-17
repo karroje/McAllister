@@ -17,12 +17,13 @@ class SimulationResultSummary:
         self.resOrigFile = resultOrigFile
         self.repeatLocationList = self.populateRepeatList()
         self.filePath = os.path.split(self.resModFile)[0]
-        self.summaryModFile = self.filePath + "summaryOfMod.txt"
-        self.summaryOrigFile = self.filePath + "summaryOfOrig.txt"
-        self.summaryFile = self.filePath + "summary.txt"
+        self.summaryModFile = self.filePath + "/summaryOfMod.txt"
+        self.summaryOrigFile = self.filePath + "/summaryOfOrig.txt"
+        self.summaryFile = self.filePath + "/summary.txt"
         self.partitionChangeList = changeList
         self.parseResultsFile(self.resModFile, self.summaryModFile)
         self.parseResultsFile(self.resOrigFile, self.summaryOrigFile)
+        self.makeCombinedFile()
     
     def populateRepeatList(self):
         repeatFile = open(self.repeatLocationsFile,"r")
@@ -49,7 +50,7 @@ class SimulationResultSummary:
         while(beginSearch <= endSearch and unmatched):
             midIndex = int((beginSearch + endSearch) / 2)
             midIndexStart = self.repeatLocationList[midIndex][0]
-            if(abs(startCoord - midIndexStart) < 6):
+            if(abs(startCoord - midIndexStart) < 150):
                 return midIndex
             elif(startCoord > midIndexStart):
                 lastLowerVal = midIndexStart
@@ -85,7 +86,7 @@ class SimulationResultSummary:
         summaryHandle.write("Partition " + str(partStats.index)
                             + ": Start " + str(partStats.start) +
                             "; End: " + str(partStats.end))
-        print(partStats)
+        
         if(self.partitionChangeList != None):
             summaryHandle.write(" Change to HMM Probs: " 
                                 + str(self.partitionChangeList[partStats.index])
@@ -138,6 +139,21 @@ class SimulationResultSummary:
                 repeatBases += endPartition - startPartition + 1
                 
         return repeatBases
+    
+    def makeCombinedFile(self):
+        modFile = open(self.summaryModFile,"r")
+        origFile = open(self.summaryOrigFile,"r")
+        combinedFile = open(self.summaryFile,"w")
+        for modLine in modFile:
+            modLine = modLine.strip("\n")
+            origLine = origFile.readline().strip("\n")
+            if modLine.startswith("Partition"):
+                combinedFile.write(modLine)
+            else: 
+                combinedFile.write(modLine.ljust(40))
+                combinedFile.write(" : ")
+                combinedFile.write(origLine.ljust(40))
+            combinedFile.write("\n")
                 
 if __name__ == "__main__":
     srs = SimulationResultSummary("HMMResults2015-07-07 16:49:17/Cumulative.rescleaned",

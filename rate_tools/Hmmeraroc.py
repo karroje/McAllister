@@ -20,7 +20,7 @@ if __name__ == "__main__":
     parser.add_argument('-f', action='store', dest='fastaFile',
                     default = "./FastaFiles/simulation.fa", help='Set Fasta File')
     parser.add_argument('-m', action='store', dest='hmmFile',
-                    default = "./HMMs/MADE2.hmm", help='Set Orig HMM file')
+                    default = "./AllHMMs/MLT1A.hmm", help='Set Orig HMM file')
     parser.add_argument('-p', action='store', dest='HMMERPATH',
                     default = "/usr/local/bin/", help='Path to HMM software')
     res = "./HMMResults" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') +"/"

@@ -78,9 +78,11 @@ class hmmprofile:
                 deltas[i] += amtToAdd/partitions
         return deltas
     
-    def calibrateDeltasToThresholds(self, conIndex, topThreshold, bottomThreshold, origProbs, startingDeltas):
+    def calibrateDeltasToThresholds(self, conIndex, topThreshold, bottomThreshold, origProbs, startingDeltas
+                                    , altsAtThreshold = None):
         changeToAlts = 0
-        altsAtThreshold = set()
+        if (altsAtThreshold == None):
+            altsAtThreshold = set()
         for x in range(len(origProbs)):
             origProb = origProbs[x]
             deltaProb = startingDeltas[x]
@@ -96,7 +98,7 @@ class hmmprofile:
         if changeToAlts > 0 or changeToAlts < 0:
             altsAtThreshold.add(conIndex)
             self.reallocateExtras(altsAtThreshold, changeToAlts, startingDeltas)
-            self.calibrateDeltasToThresholds(conIndex, topThreshold, bottomThreshold, origProbs, startingDeltas)
+            self.calibrateDeltasToThresholds(conIndex, topThreshold, bottomThreshold, origProbs, startingDeltas, altsAtThreshold)
         return startingDeltas
     '''
     Ensures that the consensus match still has the highest probability by taking average of all elements 
@@ -165,11 +167,13 @@ class hmmprofile:
             raise Exception("The bottomThreshold is outside the expected range")
         for i in range(1,len(self.emissionDecimalProbs)):
             index = self.getConsensusIndex(i)
+            #print(i)
             if index > -1:
                 currentProb = self.emissionDecimalProbs[i][index]
                 amtToAddIndex = amtToAdd
                 if currentProb + amtToAdd > topThreshold:
                     amtToAddIndex = topThreshold - currentProb
+                #print(i)
                 deltas = self.determineDeltaChanges(self.emissionDecimalProbs[i], index, amtToAddIndex,
                                                      proportional, topThreshold, bottomThreshold)
                 for j in range(len(self.emissionDecimalProbs[i])):
@@ -262,17 +266,21 @@ class hmmprofile:
                 for j in range(4):
                     cntMat[row][j] = self.emissionDecimalProbs[x][j]*100
         return cntMat
-        
-#testProfile = hmmprofile()
-#testProfile.parseFile("./HMMs/ERV24_Prim.hmm")
-#print(testProfile.emissionDecimalProbs)
-#print(testProfile.generateExpectedCountMatrix())
-#testProfile.addToDecimalEmissionProbs(-.7)
-#testProfile.addToDecimalEmissionProbs(.7)
-#testProfile.convertDecimalProbsToEmission()
-#testProfile.writeFile("HMMGreaterChange")
-testProfile2 = hmmprofile()
-testProfile2.parseFile("./HMMs/MADE2.hmm")
-testProfile2.writeConsensusSequence("./HMMs/MADE2.fa")
-#print(testProfile2.emissionDecimalProbs)
-#print(testProfile2.generateExpectedCountMatrix())
+
+def runTest():
+    #testProfile = hmmprofile()
+    #testProfile.parseFile("./HMMs/ERV24_Prim.hmm")
+    #print(testProfile.emissionDecimalProbs)
+    #print(testProfile.generateExpectedCountMatrix())
+    #testProfile.addToDecimalEmissionProbs(-.7)
+    #testProfile.addToDecimalEmissionProbs(.7)
+    #testProfile.convertDecimalProbsToEmission()
+    #testProfile.writeFile("HMMGreaterChange")
+    testProfile2 = hmmprofile()
+    testProfile2.parseFile("./AllHmms/MER90.hmm")
+    testProfile2.addToDecimalEmissionProbs(0.0106380591917)
+    #testProfile2.writeConsensusSequence("./HMMs/MADE2.fa")
+    #print(testProfile2.emissionDecimalProbs)
+    #print(testProfile2.generateExpectedCountMatrix())
+if __name__ == "__main__":
+    print(runTest())

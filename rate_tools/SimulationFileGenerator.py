@@ -4,13 +4,13 @@ import RptMatrixMod
 import random
 import numpy
 class SimulationContainer:
-    def __init__(self, start = .25, end = .4,incr = .01):
+    def __init__(self, start = .25, end = .4,incr = .002):
         self.otherRepeatFileNames = ["./HMMs/LTR16a.hmm","./HMMs/MARNA.hmm","./HMMs/MER115.hmm","./HMMs/mlt1l.hmm", "./HMMs/tigger8.hmm"]
         self.repeatHMMs = self.retrieveRepeatList(self.otherRepeatFileNames)
         self.startPercentChange = start
         self.endPercentChange = end
         self.percentIncrement = incr
-        self.repeatToFind = self.retrieveHMM("./HMMs/MADE2.hmm")
+        self.repeatToFind = self.retrieveHMM("./AllHmms/MLT1A.hmm")
         self.repeatIndicesFile = "simulationRepeatIndices.csv"
         
         
@@ -115,7 +115,9 @@ class SimulationContainer:
                 fastaSeq = self.insertRepeatSequence(seq, fastaSeq)
                 begin = len(fastaSeq)
                 seq = self.modifySequence(self.repeatToFind, percentChange)
-                fastaSeq = self.insertRepeatSequence(seq, fastaSeq)
+                start=random.randint(0,len(seq) -50)
+                end = min(len(seq) - 1, start + max(25,random.randint(0,300)))
+                fastaSeq = self.insertRepeatSequence(seq[start:end], fastaSeq)
                 end = len(fastaSeq)
                 #print("RepeatNum: " + str(i*17+k) + ", begin: " + str(begin + 1) + ", end: " + str(end))
                 indexFile.write(str(begin +1) + ", " + str(end) +"\n")
