@@ -146,21 +146,24 @@ def populateFastaFiles(partitionList,seqFolder, startFile):
     fh.close()
     return lastPart + "Part" 
        
-def populateHMMFiles(partitions, hmmFolder, origHmm, startFile):
+def populateHMMFiles(partitions, hmmFolder, origHmm, startFile, negOnly =False):
     index = 0
     lastPart = startFile.split("/")[-1].split(".")[0]
     for part in partitions:
         newHmm = copy.deepcopy(origHmm)
         #[:-1] is used to remove newline character from name
         newHmm.name = newHmm.name[:-1] + lastPart + "Part" + str(index)
-        changeProb = min(0, part.calculateChange())
+        changeProb = part.calculateChange()
+        if(negOnly):
+            changeProb = min(0, changeProb)
         newHmm.addToDecimalEmissionProbs(changeProb)
         newHmm.convertDecimalProbsToEmission()
         newHmm.writeFile(hmmFolder + newHmm.name)
         index +=1
     return  origHmm.name[:-1] + lastPart + "Part" 
     
-def createFiles(startingFasta, startingHMM, psmFile, resFolder=None, fileInfo = None):
+def createFiles(startingFasta, startingHMM, psmFile, resFolder=None, fileInfo = None,
+                negOnly = False):
     folder = maketempDirectory()
     hmmFolder = folder+"Hmms/"
     os.makedirs(hmmFolder)
@@ -179,7 +182,7 @@ def createFiles(startingFasta, startingHMM, psmFile, resFolder=None, fileInfo = 
     hmmOrig = HMMEditor.hmmprofile()
     hmmOrig.parseFile(startingHMM)
     fastaStub = populateFastaFiles(partitioner.partitionList, seqFolder, startingFasta)
-    hmmStub = populateHMMFiles(partitioner.partitionList, hmmFolder, hmmOrig, startingFasta)
+    hmmStub = populateHMMFiles(partitioner.partitionList, hmmFolder, hmmOrig, startingFasta, negOnly)
     if(fileInfo != None):
         fileInfo.folder=folder
         fileInfo.partitions = partitioner.partitionList
