@@ -80,7 +80,7 @@ class hmmprofile:
     hence the print statement
     """
     def reallocateExtras(self, uneditSet, amtToAdd, deltas):
-        print"Reallocating percentages due to crossing bottom or top Threshold percentage"
+        #print"Reallocating percentages due to crossing bottom or top Threshold percentage"
         partitions = len(deltas) - len(uneditSet)
         for i in range(len(deltas)):
             if i not in uneditSet:

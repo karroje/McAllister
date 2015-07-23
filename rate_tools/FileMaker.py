@@ -174,7 +174,7 @@ def createFiles(startingFasta, startingHMM, psmFile, resFolder=None, fileInfo = 
     hmmName = startingHMM.split("/")[-1].split(".")[0]
     partitioner = DNAPartitioner.PartitionMaker(search = hmmName, psm=psmFile)
     partitioner.createPartitions() 
-    partitioner.printPartitionList()
+    #partitioner.printPartitionList()
     partFile = open("partFile", "wb")
     #pickle.dump(partitioner,partFile)
     #partFileRead =  open("partFile",'r')

@@ -60,7 +60,7 @@ class SimulationResultSummary:
         while(beginSearch <= endSearch and unmatched):
             midIndex = int((beginSearch + endSearch) / 2)
             midIndexStart = self.repeatLocationList[midIndex][0]
-            if(abs(startCoord - midIndexStart) < 150):
+            if(abs(startCoord - midIndexStart) < 400):
                 return midIndex
             elif(startCoord > midIndexStart):
                 lastLowerVal = midIndexStart

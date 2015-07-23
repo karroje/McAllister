@@ -52,6 +52,7 @@ def deleteInitialResultFiles(dir, pattern):
 
     #Gather results
 def summarizeResults(fInfo, results, procs):
+    partResults = open(results.resultsFolder + "basesByPartition.txt",'w')
     repBasesMod = 0
     repBasesOrig = 0
     changeList  = []
@@ -68,14 +69,14 @@ def summarizeResults(fInfo, results, procs):
         repBasesMod += modResults[0]
         repBasesOrig += origResults[0]
         if(float(modResults[0])/modResults[1] > float(origResults[0])/origResults[1]):
-            print( "More results in modified.  Partition: " + str(index))
+            partResults.write( "\nMore results in modified.  Partition: " + str(index))
         elif(float(modResults[0])/modResults[1] < float(origResults[0])/origResults[1]):
-            print("Less results in modified.  Partition: " + str(index))
+            partResults.write("\nLess results in modified.  Partition: " + str(index))
         else:
-            print("Same results.  Partition: " + str(index))
-        print(str(modResults[0]) + " : " + str(origResults[0]) + " : "  + str(part.calculateChange()))
+            partResults.write("\nSame results.  Partition: " + str(index))
+        partResults.write("\n" + str(modResults[0]) + " : " + str(origResults[0]) + " : "  + str(part.calculateChange()))
         changeList.append(part.calculateChange())
-    print(str(repBasesMod) + " : " + str(repBasesOrig))
+    partResults.write("\n" + str(repBasesMod) + " : " + str(repBasesOrig))
     FileMaker.aggregrateResultFiles(results.resultsFolder, ".rescleaned")   
     FileMaker.aggregrateResultFiles(results.resultsFolder, ".resorigcleaned") 
     if(results.s):
@@ -89,7 +90,7 @@ if __name__ == "__main__":
     parser.add_argument('-f', action='store', dest='fastaFile',
                     default = "./FastaFiles/simulation.fa", help='Set Fasta File')
     parser.add_argument('-m', action='store', dest='hmmFile',
-                    default = "./AllHMMs/AluSx.hmm", help='Set Orig HMM file')
+                    default = "./AllHMMs/MIR.hmm", help='Set Orig HMM file')
     parser.add_argument('-b', action='store', dest='HMMERPATH',
                     default = "/usr/local/bin/", help='Path to HMM software')
     res = "./HMMResults" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') +"/"
@@ -106,11 +107,12 @@ if __name__ == "__main__":
     parser.add_argument('-e', action='store_false', help='deletes original results files ' + 
                         ' and only keeps the cumulative ones')
     results = parser.parse_args()
-    
+    print("start: " + str(datetime.datetime.now().time()))
     fInfo = FileInfo()
     #Create the Files to run
     FileMaker.createFiles(results.fastaFile, results.hmmFile,
                           results.psmFile, results.resultsFolder, fInfo, results.n)
+    print("Start HMMER: " +str(datetime.datetime.now().time()))
     procs = []
     runPartitions(fInfo, results, procs)
     summarizeResults(fInfo, results, procs)  
@@ -118,3 +120,4 @@ if __name__ == "__main__":
         deleteTempFileFolder(fInfo)
     if(results.e):
         deleteInitialResultFiles(results.resultsFolder,"^\d+\.(.)*")
+    print("End: " + str(datetime.datetime.now().time()))
