@@ -37,11 +37,14 @@ def aggregrateResultFiles(resultsFolder, ext):
     while ( fileCheck in fileNames):
         fh = open(resultsFolder+fileCheck,'r')
         lineNum = 0
+        linesWritten = 0 
         for line in fh:
             if lineNum > 2 and line.strip():
                 aggFile.write(line)
+                linesWritten += 1
             lineNum +=1
-        
+        if(linesWritten == 0):
+            aggFile.write("[ No lines " + str(fileNum) + " ]\n")
         fileNum +=1
         fileCheck = str(fileNum) + ext
          

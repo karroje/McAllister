@@ -119,7 +119,17 @@ class SimulationResultSummary:
         partIndex = 0
         for line in resultsHandle:
             linePieces = line.split()
-            if(prevPartitionStart != int(linePieces[-3])):
+            if(line[0] =="["):
+                self.writePartitionSummary(summaryHandle, currentPart)
+                currentPart = partitionStats()
+                currentPart.end = -1
+                currentPart.start = -2
+                currentPart.index = partIndex
+                prevPartitionStart =  -1
+                currentPart.repeatBasesPresent = 0
+                partIndex +=1
+                          
+            elif(prevPartitionStart != int(linePieces[-3])):
                 self.writePartitionSummary(summaryHandle, currentPart)
                 currentPart = partitionStats()
                 currentPart.end = int(linePieces[-1])
@@ -129,11 +139,12 @@ class SimulationResultSummary:
                 currentPart.repeatBasesPresent = self.countRepeatBasesPresent(currentPart.start, currentPart.end)
                 partIndex +=1
             
-            start = int(linePieces[4])
-            end = int(linePieces[5])
-            if(start < end):
-                currentPart.repeatBasesIdentified += (end - start) + 1 
-                currentPart.repeatBasesMatched += (self.overLapCount(start, end, self.findClosestIndex(start)))
+            if(line[0] !="["):
+                start = int(linePieces[4])
+                end = int(linePieces[5])
+                if(start < end):
+                    currentPart.repeatBasesIdentified += (end - start) + 1 
+                    currentPart.repeatBasesMatched += (self.overLapCount(start, end, self.findClosestIndex(start)))
             
     def countRepeatBasesPresent(self, startPartition, endPartition):
         repeatBases  = 0
