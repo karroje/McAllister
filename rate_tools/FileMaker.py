@@ -54,6 +54,7 @@ def parseResultsFile(infile, outFile, startIndex):
     startLine = "Scores for complete hits:"
     endLine1 = "------ inclusion threshold ------"
     endLine2 = "Annotation for"
+    repeatCount = 0
     fh = open(infile, 'r')
     fw = open(outFile,'w')
     totalBases = 0.0
@@ -68,9 +69,11 @@ def parseResultsFile(infile, outFile, startIndex):
             repeatBases += countBases(line)
             line = changeBases(line, startIndex)
             fw.write(line)
+            if(validResultLine(line)):
+                repeatCount += 1
         if("Target sequences" in line):
             totalBases = extractTotalBases(line)
-    return [repeatBases,totalBases]
+    return [repeatBases,totalBases, repeatCount]
             
 def extractTotalBases(line):
     totalBases = -1
@@ -87,8 +90,13 @@ def extractTotalBases(line):
 def changeBases(line, offset):
     pieces = line.split()
     if(validResultLine(line)):
-        pieces[5] = str(int(pieces[5]) + offset)
-        pieces[4] = str(int(pieces[4]) + offset)
+        pieces[5] = int(pieces[5]) + offset
+        pieces[4] = int(pieces[4]) + offset
+        if(pieces[5] < pieces[4]):
+            pieces[5] = -pieces[5]
+            pieces[4] = -pieces[4]
+        pieces[5] = str(pieces[5])
+        pieces[4] = str(pieces[4])
     line = "   ".join(pieces) + "\n"
     return line
 

@@ -49,10 +49,31 @@ def deleteInitialResultFiles(dir, pattern):
     for f in os.listdir(dir):
         if re.search(pattern, f):
             os.remove(os.path.join(dir, f))
-
+            
+def writeResultsLinesForPartition(modResults, origResults, partResultsFile, index, part, fInfo):
+    if(float(modResults[0])/modResults[1] > float(origResults[0])/origResults[1]):
+        partResultsFile.write( "\nMore results in modified.  Partition: " + str(index))
+    elif(float(modResults[0])/modResults[1] < float(origResults[0])/origResults[1]):
+        partResultsFile.write("\nLess results in modified.  Partition: " + str(index))
+    else:
+        partResultsFile.write("\nSame results.  Partition: " + str(index))
+    partResultsFile.write("\n Change: "  + str(part.calculateChange())+ ": Bases: " 
+                          + str(modResults[0]) + " : " + str(origResults[0]) + " : Repeats: "  + 
+                          str(modResults[2]) + " : " + str(origResults[2]))
+    #If 100 more bases and more repeats in modified.  Save file to new name
+    if(modResults[0] - 100 > origResults[0] and modResults[2] > origResults[2]):
+        shutil.copy(results.resultsFolder + str(index) + ".res", results.resultsFolder + "MoreModified/" )
+        shutil.copy(results.resultsFolder + str(index) + ".resorig", results.resultsFolder + "MoreModified/" )
+    elif(modResults[0] + 100 < origResults[0] and modResults[2] < origResults[2]):
+        shutil.copy(results.resultsFolder + str(index) + ".res", results.resultsFolder + "MoreOrig/" )
+        shutil.copy(results.resultsFolder + str(index) + ".resorig", results.resultsFolder + "MoreOrig/" )
+def makeSubFoldersforResults(results):
+    os.mkdir(results.resultsFolder + "MoreModified")
+    os.mkdir(results.resultsFolder + "MoreOrig")
     #Gather results
 def summarizeResults(fInfo, results, procs):
-    partResults = open(results.resultsFolder + "basesByPartition.txt",'w')
+    makeSubFoldersforResults(results)
+    partResultsFile = open(results.resultsFolder + "basesByPartition.txt",'w')
     repBasesMod = 0
     repBasesOrig = 0
     changeList  = []
@@ -68,15 +89,9 @@ def summarizeResults(fInfo, results, procs):
         origResults =FileMaker.parseResultsFile(resFileOrig, resFileOrig + "cleaned", part.startIndex)
         repBasesMod += modResults[0]
         repBasesOrig += origResults[0]
-        if(float(modResults[0])/modResults[1] > float(origResults[0])/origResults[1]):
-            partResults.write( "\nMore results in modified.  Partition: " + str(index))
-        elif(float(modResults[0])/modResults[1] < float(origResults[0])/origResults[1]):
-            partResults.write("\nLess results in modified.  Partition: " + str(index))
-        else:
-            partResults.write("\nSame results.  Partition: " + str(index))
-        partResults.write("\n" + str(modResults[0]) + " : " + str(origResults[0]) + " : "  + str(part.calculateChange()))
+        writeResultsLinesForPartition(modResults, origResults, partResultsFile, index, part, fInfo)
         changeList.append(part.calculateChange())
-    partResults.write("\n" + str(repBasesMod) + " : " + str(repBasesOrig))
+    partResultsFile.write("\n" + str(repBasesMod) + " : " + str(repBasesOrig))
     FileMaker.aggregrateResultFiles(results.resultsFolder, ".rescleaned")   
     FileMaker.aggregrateResultFiles(results.resultsFolder, ".resorigcleaned") 
     if(results.s):
@@ -88,16 +103,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Edit to be simulated results
     parser.add_argument('-f', action='store', dest='fastaFile',
-                    default = "./FastaFiles/chr1.fa", help='Set Fasta File')
+                    default = "./FastaFiles/chr22.fa", help='Set Fasta File')
     parser.add_argument('-m', action='store', dest='hmmFile',
-                    default = "./AllHMMs/MLT1A.hmm", help='Set Orig HMM file')
+                    default = "./AllHMMs/MIR.hmm", help='Set Orig HMM file')
     parser.add_argument('-b', action='store', dest='HMMERPATH',
                     default = "/usr/local/bin/", help='Path to HMM software')
     res = "./HMMResults" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') +"/"
     parser.add_argument('-r', action='store', dest='resultsFolder',
                     default = res, help='Where results will be located')
     parser.add_argument('-p', action='store', dest='psmFile',
-                    default = "./PSMs/chr1FromFileMaker.psm", help='Where PSM file is located')
+                    default = "./PSMs/chr22FromFileMaker.psm", help='Where PSM file is located')
     parser.add_argument('-s', action='store_true', help='Run is Simulation.  Make Simulation ' +
                         ' summary files')
     parser.add_argument('-n', action='store_true', help='Make only negative changes to  ' +

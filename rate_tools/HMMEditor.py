@@ -291,5 +291,14 @@ def runTest():
     #testProfile2.writeConsensusSequence("./HMMs/MADE2.fa")
     #print(testProfile2.emissionDecimalProbs)
     #print(testProfile2.generateExpectedCountMatrix())
+def printTest(fileLocation):
+    profile1 = hmmprofile()
+    profile1.parseFile(fileLocation)
+    print("\n".join(str(x) for x in profile1.emissionDecimalProbs))
+    
 if __name__ == "__main__":
-    print(runTest())
+    printTest("./HillClimber_MLT1A_chr22.fa2015-07-28 16:15:00/Hmms/MLT1A_0.hmm")
+    print("NEXT HMM !!!!!!!!")
+    printTest("./HillClimber_MLT1A_chr22.fa2015-07-28 16:15:00/Hmms/MLT1A_-3.hmm")
+    #print(runTest())
+    
