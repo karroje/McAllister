@@ -29,7 +29,8 @@ class HillClimber:
         if(makeDirs):
             os.makedirs(self.resultsFolder)
         self.hmmBaseName = hmmName
-        self.hmmBest = self.copyOriginalHmmFile()
+        if(makeDirs):
+            self.hmmBest = self.copyOriginalHmmFile()
         self.hmmBestAmount = 0
         self.hmmMostBases = 0 
         self.annealingRate = .8
@@ -210,11 +211,11 @@ class RepeatInstance:
 
 
 if __name__ == "__main__":
-    hc = HillClimber("L2", "chr22.fa")
-    hc.runHillClimber()
+    #hc = HillClimber("MER5A", "chr22.fa")
+    #hc.runHillClimber()
     
-    #hc = HillClimber("MLTA", "chr22.fa")  
-    #hc.resultsFolder = "./HillClimber_AluSx_chr22.fa2015-07-28 15:27:23/Results/"
-    #hc.hmmBestAmount= -3
-    #hc.finalCompare()
+    hc = HillClimber("L2", "chr22.fa", False)  
+    hc.resultsFolder = "./HillClimber_L2_chr22.fa2015-07-28 17:11:53/Results/"
+    hc.hmmBestAmount= -7
+    hc.finalCompare()
         

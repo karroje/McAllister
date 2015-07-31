@@ -103,16 +103,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Edit to be simulated results
     parser.add_argument('-f', action='store', dest='fastaFile',
-                    default = "./FastaFiles/chr22.fa", help='Set Fasta File')
+                    default = "./FastaFiles/chr3.fa", help='Set Fasta File')
     parser.add_argument('-m', action='store', dest='hmmFile',
-                    default = "./AllHMMs/MIR.hmm", help='Set Orig HMM file')
+                    default = "./AllHMMs/MLT1A.hmm", help='Set Orig HMM file')
     parser.add_argument('-b', action='store', dest='HMMERPATH',
                     default = "/usr/local/bin/", help='Path to HMM software')
     res = "./HMMResults" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') +"/"
     parser.add_argument('-r', action='store', dest='resultsFolder',
                     default = res, help='Where results will be located')
     parser.add_argument('-p', action='store', dest='psmFile',
-                    default = "./PSMs/chr22FromFileMaker.psm", help='Where PSM file is located')
+                    default = "./PSMs/chr3FromFileMaker.psm", help='Where PSM file is located')
     parser.add_argument('-s', action='store_true', help='Run is Simulation.  Make Simulation ' +
                         ' summary files')
     parser.add_argument('-n', action='store_true', help='Make only negative changes to  ' +

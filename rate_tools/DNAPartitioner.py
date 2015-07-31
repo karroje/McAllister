@@ -45,7 +45,7 @@ class PartitionMaker:
         self.familiesDict = self.createDict(self.famDistFile)
         self.includedFamDict ={}
         #self.familiesList = self.makeList() 
-        self.pruneFamilies(.5)
+        self.pruneFamilies(.1)
         self.currentPartition = Partition()
         self.partitionList =[]
     
